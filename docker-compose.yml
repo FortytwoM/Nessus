@@ -1,0 +1,40 @@
+services:
+  nessus:
+    build: .
+    container_name: nessus
+    restart: always
+    stop_grace_period: 30s
+    environment:
+      - NESSUS_USERNAME=${NESSUS_USERNAME:-admin}
+      - NESSUS_PASSWORD=${NESSUS_PASSWORD:-admin}
+      - NESSUS_UPDATE_URL=${NESSUS_UPDATE_URL:-}
+      - NESSUS_DEB_URL=${NESSUS_DEB_URL:-}
+      - NESSUS_AUTO_UPDATE_INTERVAL=${NESSUS_AUTO_UPDATE_INTERVAL:-}
+      - NESSUS_CERT_SAN=${NESSUS_CERT_SAN:-}
+      - NESSUS_PROXY=${NESSUS_PROXY:-}
+      - NESSUS_HTTP_PROXY=${NESSUS_HTTP_PROXY:-}
+      - NESSUS_HTTPS_PROXY=${NESSUS_HTTPS_PROXY:-}
+      - NESSUS_ALL_PROXY=${NESSUS_ALL_PROXY:-}
+      - NESSUS_NO_PROXY=${NESSUS_NO_PROXY:-}
+    ports:
+      - "8834:8834"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - LINUX_IMMUTABLE
+    volumes:
+      - nessus_data:/opt/nessus
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:8834/server/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 600s
+
+volumes:
+  nessus_data:

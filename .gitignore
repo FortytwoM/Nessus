@@ -1,0 +1,21 @@
+# Environment and secrets
+.env
+.env.local
+*.pem
+
+# Nessus outputs
+*.log
+*.nessus
+*.pdf
+
+# Plugin update artifacts (created inside container)
+all-2.0.tar.gz
+
+# OS and editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.cursor/
+.vscode/
+*.bak
